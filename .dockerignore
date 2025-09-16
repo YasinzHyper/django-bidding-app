@@ -1,0 +1,61 @@
+# Git
+.git
+.gitignore
+README.md
+
+# Docker
+.docker
+Dockerfile*
+docker-compose*
+
+# Python
+__pycache__
+*.pyc
+*.pyo
+*.pyd
+.Python
+env
+pip-log.txt
+pip-delete-this-directory.txt
+.tox
+.coverage
+.coverage.*
+.cache
+nosetests.xml
+coverage.xml
+*.cover
+*.log
+.git
+.mypy_cache
+.pytest_cache
+.hypothesis
+
+# Django
+*.log
+local_settings.py
+db.sqlite3
+db.sqlite3-journal
+
+# OS
+.DS_Store
+.DS_Store?
+._*
+.Spotlight-V100
+.Trashes
+ehthumbs.db
+Thumbs.db
+.vscode
+.idea
+
+# Virtual environments
+venv/
+env/
+ENV/
+
+# Screenshots (but we'll keep them for documentation)
+# screenshots/
+
+# Local data directory (but allow the directory to be created)
+data/
+staticfiles/
+static/collected_static/

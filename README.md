@@ -23,14 +23,122 @@ Concepts covered in this app
 
 # Setup
 
-**Modules/dependencies:**
-- `django`
+**Prerequisites:**
+- Docker and Docker Compose installed on your system
+- Git (for cloning the repository)
 
-**Running locally:**
-```sh
-# Ffter activating your virtualenv
+## Quick Start with Docker
+
+**1. Clone and Start:**
+```bash
+git clone https://github.com/danielc92/django-bidding-app.git
+cd django-bidding-app
+
+# For development (with auto-reload)
+docker-compose -f docker-compose.dev.yml up --build
+
+# For production
+docker-compose up --build
+```
+
+**2. Access the application:**
+- Main app: http://localhost:8000
+- Admin panel: http://localhost:8000/admin 
+  - Username: `admin`
+  - Password: `admin123`
+
+**3. Stop the application:**
+```bash
+docker-compose down
+```
+
+## Docker Setup Details
+
+**What happens automatically:**
+- ✅ Database migrations are applied
+- ✅ Default superuser is created (admin/admin123)
+- ✅ Static files are handled by WhiteNoise
+- ✅ Data persists in `./data/` directory
+- ✅ Development mode includes file watching for auto-reload
+
+**Available Docker commands:**
+
+Using Docker Compose directly:
+```bash
+# Development mode (with file watching)
+docker-compose -f docker-compose.dev.yml up --build
+
+# Production mode (with Gunicorn)
+docker-compose up --build
+
+# Stop containers
+docker-compose down
+
+# View logs
+docker-compose logs -f
+
+# Run management commands
+docker-compose exec web python manage.py <command>
+```
+
+Using the included Makefile (Linux/macOS/WSL):
+```bash
+make dev         # Start in development mode
+make prod        # Start in production mode  
+make down        # Stop all containers
+make logs        # View application logs
+make clean       # Clean up containers and volumes
+make shell       # Open container shell
+make django-shell # Open Django shell
+make admin       # Create additional superuser
+make migrate     # Run migrations
+make test        # Run tests
+```
+
+**File Structure:**
+```
+django-bidding-app/
+├── docker-compose.yml          # Production configuration
+├── docker-compose.dev.yml      # Development configuration  
+├── Dockerfile                  # Docker image definition
+├── entrypoint.sh              # Container startup script
+├── .dockerignore              # Files to exclude from build
+├── .gitattributes             # Git line ending configuration
+├── data/                      # SQLite database (persistent)
+└── staticfiles/               # Collected static files
+```
+
+**Troubleshooting:**
+- If you see permission errors, ensure Docker has access to the project directory
+- Database data persists in `./data/` - delete this folder to reset the database
+- For Windows users: ensure line endings are correct (handled by .gitattributes)
+
+## Alternative - Local Development (without Docker)
+
+**Prerequisites:**
+- Python 3.7+ 
+- pip
+
+**Setup:**
+```bash
+# Create virtual environment
+python -m venv venv
+source venv/bin/activate  # On Windows: venv\Scripts\activate
+
+# Install dependencies
+pip install -r requirements.txt
+
+# Run migrations
+python manage.py migrate
+
+# Create superuser (optional)
+python manage.py createsuperuser
+
+# Start development server
 python manage.py runserver
 ```
+
+Access at: http://localhost:8000
 
 # Tests
 - Tests performed on this project. What did you do? Which files were used? Was it successful?

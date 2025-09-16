@@ -1,4 +1,3 @@
-import django_heroku
 import os
 
 # Build paths inside the project like this: os.path.join(BASE_DIR, ...)
@@ -9,16 +8,16 @@ BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 # See https://docs.djangoproject.com/en/2.2/howto/deployment/checklist/
 
 # SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = 'u&u)*)c5cl@^syz^*5kq0^em#+3fu7(!=n1mjpoh$i5heoc_t2'
+SECRET_KEY = os.getenv('SECRET_KEY', 'u&u)*)c5cl@^syz^*5kq0^em#+3fu7(!=n1mjpoh$i5heoc_t2')
 
 # SECURITY WARNING: don't run with debug turned on in production!
+DEBUG = os.getenv('DEBUG', 'True').lower() == 'true'
+
+# Allow all hosts in Docker environment, but restrict in production
 if os.getenv('DJANGO_ENVIRONMENT') == 'PRODUCTION':
-    DEBUG = False
+    ALLOWED_HOSTS = os.getenv('ALLOWED_HOSTS', '').split(',') if os.getenv('ALLOWED_HOSTS') else ['localhost', '127.0.0.1']
 else:
-    DEBUG = True
-
-
-ALLOWED_HOSTS = []
+    ALLOWED_HOSTS = ['*']
 
 
 # Application definition
@@ -35,6 +34,7 @@ INSTALLED_APPS = [
 
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
+    'whitenoise.middleware.WhiteNoiseMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
     'django.middleware.common.CommonMiddleware',
     'django.middleware.csrf.CsrfViewMiddleware',
@@ -67,10 +67,11 @@ WSGI_APPLICATION = 'bidding_system.wsgi.application'
 # Database
 # https://docs.djangoproject.com/en/2.2/ref/settings/#databases
 
+# Use environment variable for database path in Docker
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': os.path.join(BASE_DIR, 'db.sqlite3'),
+        'NAME': os.path.join(BASE_DIR, 'data', 'db.sqlite3'),
     }
 }
 
@@ -113,11 +114,7 @@ USE_TZ = True
 
 STATIC_URL = '/static/'
 STATICFILES_DIRS = [os.path.join(BASE_DIR, 'static')]
+STATIC_ROOT = os.path.join(BASE_DIR, 'staticfiles')
 
 
 LOGIN_URL='/login/'
-
-
-
-# Activate Django-Heroku.
-django_heroku.settings(locals(), databases=False)

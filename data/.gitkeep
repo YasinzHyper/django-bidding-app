@@ -1,0 +1,2 @@
+# This directory contains the SQLite database file
+# It's mapped as a volume in Docker to persist data
